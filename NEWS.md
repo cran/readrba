@@ -1,3 +1,7 @@
+# readrba 0.1.1
+* utils::download.file() used to attempt to address corporate network problems with curl
+* 'www' added to URLs, to fix error encountered on some systems
+
 # readrba 0.1.0
 * Speed and stability improvements
 * More non-standard tables can be tidied
