@@ -24,22 +24,13 @@ browse_rba_series("Australian government 10 year") %>%
 ## ----bondyield, eval = F------------------------------------------------------
 #  bond_yield <- read_rba(series_id = "FCMYGBAG10")
 
-## ---- include = F-------------------------------------------------------------
-# filenames <- file.path(tempdir(), paste0("f2", c("a", "b", "c"), ".xls"))
-# 
-# purrr::map2(.x = c("f2", "f2"),
-#             .y = c("current", "historical"),
-#             .f = get_rba_urls) %>%
-#   purrr::flatten_chr() %>%
-#   download.file(url = ., destfile = filenames)
-# 
-# bond_yield <- read_rba_local(filenames)
-# 
-# bond_yield <- bond_yield %>%
-#   dplyr::filter(series_id == "FCMYGBAG10")
-# 
-# save(bond_yield, file = file.path("vignettes", "FCMYGBAG10.rda"))
+## ---- include = F, eval = F---------------------------------------------------
+#  bond_yield <- read_rba(series_id = "FCMYGBAG10")
+#  
+#  save(bond_yield, file = file.path("vignettes", "FCMYGBAG10.rda"))
+#  
 
+## ---- include = F-------------------------------------------------------------
 load("FCMYGBAG10.rda")
 
 ## ----glimpsebondyield---------------------------------------------------------
@@ -103,6 +94,9 @@ dplyr::glimpse(forecasts)
 ## ----viz-unemp-forecasts------------------------------------------------------
 forecasts %>%
   filter(series == "unemp_rate") %>%
-  ggplot(aes(x = date, y = value, group = forecast_date)) +
+  ggplot(aes(x = date, 
+             y = value, 
+             group = forecast_date, 
+             colour = forecast_date)) +
   geom_line()
 
