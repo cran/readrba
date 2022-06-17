@@ -1,3 +1,7 @@
+# readrba 0.1.3
+* Additional checks to ensure file format (eg. "xls") matches file content (eg. "xlsx")
+* More examples added to vignette
+
 # readrba 0.1.2
 * refreshed internal data, update vignette and README
 * Forecasts in the 2014-2018 period now more complete, thanks to Angus Moore
