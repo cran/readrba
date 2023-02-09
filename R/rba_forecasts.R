@@ -61,11 +61,30 @@ rba_forecasts <- function(refresh = TRUE,
       dplyr::filter(.data$forecast_date ==
         max(.data$forecast_date))
   } else {
+    # Define 'scrape priority' - if we have data from the hist_forecasts
+    # we want to use that rather than from another source - that has the highest
+    # priority
+    hist_forecasts <- hist_forecasts %>%
+      dplyr::mutate(scrape_priority = 1)
+
+    forecasts_1418 <- forecasts_1418 %>%
+      dplyr::mutate(scrape_priority = 3)
+
+    recent_forecasts <- recent_forecasts %>%
+      dplyr::mutate(scrape_priority = 2)
+
     forecasts <- dplyr::bind_rows(
       hist_forecasts,
       forecasts_1418,
       recent_forecasts
     )
+
+    forecasts <- forecasts %>%
+      dplyr::group_by(.data$forecast_date, .data$date) %>%
+      dplyr::filter(.data$scrape_priority == min(.data$scrape_priority)) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(-"scrape_priority")
+
   }
 
   forecasts <- dplyr::arrange(
@@ -107,14 +126,8 @@ read_forecasts <- function(...) {
 #' }
 #' @noRd
 scrape_rba_forecasts <- function() {
-  recent_forecast_list_url <- "https://www.rba.gov.au/publications/smp/forecasts-archive.html"
 
-  recent_forecast_urls <- recent_forecast_list_url %>%
-    safely_read_html() %>%
-    rvest::html_nodes(".width-text a") %>%
-    rvest::html_attr("href")
-
-  recent_forecast_urls <- paste0("https://www.rba.gov.au", recent_forecast_urls)
+  recent_forecast_urls <- paste0("https://www.rba.gov.au", scrape_recent_forecast_urls())
 
   load_recent_table <- function(url) {
     forecast_date <- gsub(".*https://www.rba.gov.au/publications/smp/(.+)/forecasts.html*", "\\1", url)
@@ -139,7 +152,7 @@ scrape_rba_forecasts <- function() {
     table <- table[-nrow(table), ]
 
     table <- table %>%
-      tidyr::pivot_longer(-.data$series_desc, names_to = "q_year")
+      tidyr::pivot_longer(-"series_desc", names_to = "q_year")
 
     table <- table %>%
       dplyr::mutate(
@@ -153,7 +166,7 @@ scrape_rba_forecasts <- function() {
         year_qtr = lubridate::quarter(date, with_year = TRUE),
         source = "SMP"
       ) %>%
-      dplyr::select(-.data$q_year)
+      dplyr::select(-"q_year")
 
     table <- table %>%
       dplyr::mutate(value = rba_value_to_num(.data$value))
@@ -186,13 +199,13 @@ scrape_rba_forecasts <- function() {
 
   recent_forecasts <- recent_forecasts %>%
     dplyr::select(
-      .data$forecast_date,
-      .data$date,
-      .data$series,
-      .data$value,
-      .data$series_desc,
-      .data$source,
-      .data$notes,
+      "forecast_date",
+      "date",
+      "series",
+      "value",
+      "series_desc",
+      "source",
+      "notes",
       dplyr::everything()
     )
 
@@ -200,4 +213,34 @@ scrape_rba_forecasts <- function() {
                                     !is.na(.data$series))
 
   recent_forecasts
+}
+
+scrape_recent_forecast_urls <- function() {
+  recent_forecast_list_url <- "https://www.rba.gov.au/publications/smp/forecasts-archive.html"
+
+  recent_forecast_urls <- recent_forecast_list_url %>%
+    safely_read_html() %>%
+    rvest::html_nodes(".width-text a") %>%
+    rvest::html_attr("href")
+
+  recent_forecast_urls
+}
+
+#' Obtain the month of the latest RBA SMP forecasts
+#' @details
+#' This function returns a length-one date, corresponding to first day of the
+#' month of the latest RBA Statement on Monetary Policy forecasts.
+#'
+#' @examples
+#' \dontrun{
+#' latest_forecast_month()
+#' }
+#' @keywords internal
+
+latest_forecast_month <- function() {
+  urls <- scrape_recent_forecast_urls()
+  urls <- stringr::str_remove_all(urls, "/publications/smp/")
+  urls <- stringr::str_remove_all(urls, "/forecasts.html")
+  urls <- paste0(urls, "/01")
+  max(as.Date(urls, format = "%Y/%b/%d"))
 }
