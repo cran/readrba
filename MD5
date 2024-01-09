@@ -1,7 +1,7 @@
-bca17a9e644cfe94ed35ad9dd1dbef6c *DESCRIPTION
+c4dd7f9363e5b747d38dc5cf172b7388 *DESCRIPTION
 fc2f540455b163bc5b6f5dd50a172490 *LICENSE
 63e82fb39b352adf767e5a1751a713ad *NAMESPACE
-4b976efc11ab7b4e18db161ec9a75bfc *NEWS.md
+209476842672daeac393f5f06c4a3d95 *NEWS.md
 ccd3b14165dac8dbb7f440a384e4b9c3 *R/browse_data.R
 ac5f1205aefcc134f2e4725eaddb2297 *R/check_if_rba_ts.R
 2a5cd9045ef83b7ceadd25cb6cb442a4 *R/check_rba_connection.R
@@ -16,7 +16,7 @@ a5b205236dd6334d9d8d6eb950a7fb83 *R/read_cashrate.R
 e0ef681901465d24f47f9139cb2c086a *R/readrba-package.R
 1790034c14b8f276265a7319dcfbc053 *R/safely_read_html.R
 eb954899dbc93532eb9a275851a4cc6f *R/scrape_table_list.R
-c9aab0fdec097f6c4e614e856984ccf7 *R/sysdata.rda
+123ebdf8624b140f537476aade456b30 *R/sysdata.rda
 ebef583db9bf720548963e4c0df848ea *R/tidy_rba.R
 933ba8e7fd572e7de426d17fa25232fc *R/url_exists.R
 73991543a0117cadc1770cf125c71c5e *R/utils-pipe.R
@@ -24,7 +24,7 @@ ebef583db9bf720548963e4c0df848ea *R/tidy_rba.R
 9b8f4dcbe9d21f1574082eb61e46100c *build/vignette.rds
 e8ae5df10bf12e74ee750715508255ef *inst/doc/readrba.R
 7064d9d3a1f9b28aef4786d5fd10e6c7 *inst/doc/readrba.Rmd
-a2ef485d1ca9622cc0dd38840c4f1c1d *inst/doc/readrba.html
+9c03978185e96efe84f679e612fe8f24 *inst/doc/readrba.html
 2f284f342a157e8baadad8ffedff58bf *man/browse_rba.Rd
 2b133494e468b68b88556f00c36c3871 *man/check_if_rba_ts.Rd
 b0a65a580c6e64bfaf0360fb6452bd61 *man/figures/README-unnamed-chunk-3-1.png
