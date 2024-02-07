@@ -107,13 +107,16 @@ forecasts %>%
 
 ## ----change-in-forecasts,   fig.height = 6------------------------------------
 # We've already created the `forecasts` object, like this: 
-# forecasts <- rba_forecasts
+# forecasts <- rba_forecasts()
 
 latest_two <- forecasts %>%
   filter(forecast_date %in% c(max(forecast_date),
                               max(forecast_date) - months(3)))
-
-latest_two %>%
+latest_two %>% 
+  group_by(series_desc) %>% 
+  # Only include series for which we have forecasts in both of the latest SMPs
+  filter(length(unique(forecast_date)) >= 2) %>% 
+  ungroup() %>% 
   mutate(forecast_date = format(forecast_date, "%b %Y")) %>%
   ggplot(aes(x = date, y = value, col = forecast_date)) +
   geom_line() +
