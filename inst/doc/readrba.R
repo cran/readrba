@@ -58,11 +58,6 @@ browse_rba_tables("government bond") %>%
 #  f2 <- read_rba("f2")
 
 ## ----include = F--------------------------------------------------------------
-# tempf2 <- tempfile(fileext = ".xls")
-# get_rba_urls("f2") %>%
-#   download.file(destfile = tempf2)
-# f2 <- read_rba_local(tempf2)
-# save(f2, file = "vignettes/f2.rda", compress = TRUE, compression_level = 9)
 load("f2.rda")
 
 ## ----uniquef2-----------------------------------------------------------------

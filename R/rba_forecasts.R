@@ -143,7 +143,8 @@ scrape_recent_forecast_urls <- function() {
 
 latest_forecast_month <- function() {
   urls <- scrape_recent_forecast_urls()
-  year_month_chars <- stringr::str_sub(urls, 1, 8)
+  urls_no_preface <- gsub("/publications/smp/", "", urls)
+  year_month_chars <- stringr::str_sub(urls_no_preface, 1, 8)
   forecast_dates <- as.Date(paste0(year_month_chars, "/01"),
                             format = "%Y/%b/%d")
 
@@ -157,7 +158,7 @@ latest_forecast_month <- function() {
 scrape_rba_forecasts <- function() {
   xlsx_url = "https://www.rba.gov.au/statistics/xls/smp-forecast-archive.xlsx"
   xlsx_file <- tempfile(fileext = ".xlsx")
-  utils::download.file(xlsx_url, xlsx_file, mode = "wb")
+  dl_file(xlsx_url, xlsx_file, mode = "wb")
 
   xlsx_metadata <- readxl::read_excel(xlsx_file,
                                       sheet = "Contents",
@@ -169,6 +170,16 @@ scrape_rba_forecasts <- function() {
                                "notes",
                                "source",
                                "rounding")
+
+  sheet_names_with_contents <- readxl::excel_sheets(xlsx_file)
+  sheet_names <- sheet_names_with_contents[sheet_names_with_contents != "Contents"]
+
+  missing_sheets <- xlsx_metadata$sheet_name[!xlsx_metadata$sheet_name %in% sheet_names]
+
+  if (length(missing_sheets) > 0) {
+    warning(paste("The following worksheets are missing from the RBA forecast file: ",
+                  paste(missing_sheets, collapse = ", ")))
+  }
 
   tidy_forecast_sheet <- function(sheet_name) {
     readxl::read_excel(xlsx_file,
@@ -188,8 +199,8 @@ scrape_rba_forecasts <- function() {
   }
 
 
-  fc_without_metadata <- purrr::map_dfr(xlsx_metadata$sheet_name,
-                                            tidy_forecast_sheet)
+  fc_without_metadata <- purrr::map_dfr(sheet_names,
+                                        tidy_forecast_sheet)
 
   fc_raw <- fc_without_metadata %>%
     dplyr::left_join(xlsx_metadata, by = "sheet_name") %>%
