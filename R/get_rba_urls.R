@@ -17,6 +17,10 @@ get_rba_urls <- function(table_no,
 
   table_no <- tolower(table_no)
 
+  if (update_urls) {
+    check_rba_connection()
+  }
+
   get_urls <- function(tab, table_no) {
     tab <- tab[tab$current_or_historical == cur_hist, ]
     tab$no <- tolower(tab$no)

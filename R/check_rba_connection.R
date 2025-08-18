@@ -11,10 +11,11 @@ check_rba_connection <- function(url = "https://www.rba.gov.au") {
   }
 
   if (isFALSE(rba_url_works)) {
-      stop(
+      message(
         "R cannot access the RBA website.",
         " Please check your internet connection and security settings."
       )
+    invisible()
   }
 
   invisible(TRUE)

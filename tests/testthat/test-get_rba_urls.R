@@ -1,4 +1,6 @@
 test_that("get_rba_urls() matches correct URLs", {
+  skip_on_cran()
+  skip_if_offline()
   expect_length(get_rba_urls("A1"), 1)
   expect_length(get_rba_urls("A3", "historical"), 3)
   expect_length(get_rba_urls("A3", "current"), 1)
@@ -9,6 +11,8 @@ test_that("get_rba_urls() matches correct URLs", {
 })
 
 test_that("get_rba_urls() returns multiple URLs where multiple tables have the same no.", {
+  skip_on_cran()
+  skip_if_offline()
   expect_length(get_rba_urls("A3", "current"), 1)
   expect_length(get_rba_urls("A3", "historical"), 3)
 })

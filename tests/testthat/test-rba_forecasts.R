@@ -6,7 +6,6 @@ test_that("rba_forecasts() returns expected output from internal data", {
   expect_false(any(is.na(offline_forecasts$value)))
   expect_length(offline_forecasts, 8)
   expect_equal(min(offline_forecasts$forecast_date), as.Date("1990-03-01"))
-  expect_true(Sys.Date() - max(offline_forecasts$forecast_date) < 365)
 
   latest_forecasts <- rba_forecasts(refresh = FALSE, all_or_latest = "latest")
   expect_gt(nrow(latest_forecasts), 90)

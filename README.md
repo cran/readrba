@@ -13,12 +13,13 @@ maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lif
 coverage](https://codecov.io/gh/MattCowgill/readrba/branch/master/graph/badge.svg)](https://app.codecov.io/gh/MattCowgill/readrba?branch=master)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/readrba)](https://CRAN.R-project.org/package=readrba)
+[![R-CMD-check](https://github.com/MattCowgill/readrba/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MattCowgill/readrba/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Get data from the [Reserve Bank of
 Australia](https://rba.gov.au/statistics/tables/) in a
 [tidy](https://tidyr.tidyverse.org/articles/tidy-data.html)
-[tibble](https://tibble.tidyverse.org)!
+[tibble](https://tibble.tidyverse.org).
 
 ## Installation
 
@@ -38,7 +39,9 @@ remotes::install_github("mattcowgill/readrba")
 
 ``` r
 library(ggplot2)
+#> Warning: package 'ggplot2' was built under R version 4.4.3
 library(dplyr)
+#> Warning: package 'dplyr' was built under R version 4.4.3
 library(readrba)
 ```
 
@@ -51,6 +54,10 @@ Here’s the unemployment rate:
 
 ``` r
 unemp_rate <- read_rba(series_id = "GLFSURSA") 
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
 
 unemp_rate %>%
   ggplot(aes(x = date, y = value)) +
@@ -68,6 +75,8 @@ unemployment rate the RBA has made over the past three decades:
 ``` r
 unemp_forecasts <- rba_forecasts() %>%
   filter(series == "unemp_rate")
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
 
 unemp_forecasts %>%
   ggplot(aes(x = date, 
@@ -90,6 +99,10 @@ table: table G1, consumer price inflation using `read_rba()`:
 
 ``` r
 cpi_table <- read_rba(table_no = "g1")
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
 ```
 
 The object returned by `read_rba()` is a tidy tibble (ie. in ‘long’
@@ -100,12 +113,12 @@ head(cpi_table)
 #> # A tibble: 6 × 11
 #>   date       series          value frequency series_type units source pub_date  
 #>   <date>     <chr>           <dbl> <chr>     <chr>       <chr> <chr>  <date>    
-#> 1 1922-06-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 2 1922-09-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 3 1922-12-31 Consumer price…   2.7 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 4 1923-03-31 Consumer price…   2.7 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 5 1923-06-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 6 1923-09-30 Consumer price…   2.9 Quarterly Original    Inde… ABS /… 2024-08-01
+#> 1 1922-06-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 2 1922-09-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 3 1922-12-31 Consumer price…   2.7 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 4 1923-03-31 Consumer price…   2.7 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 5 1923-06-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 6 1923-09-30 Consumer price…   2.9 Quarterly Original    Inde… ABS /… 2025-07-31
 #> # ℹ 3 more variables: series_id <chr>, description <chr>, table_title <chr>
 ```
 
@@ -114,21 +127,25 @@ one tidy tibble:
 
 ``` r
 rba_data <- read_rba(table_no = c("a1", "g1"))
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning: All formats failed to parse. No formats found.
 
 head(rba_data)
 #> # A tibble: 6 × 11
 #>   date       series          value frequency series_type units source pub_date  
 #>   <date>     <chr>           <dbl> <chr>     <chr>       <chr> <chr>  <date>    
-#> 1 2013-07-03 Australian dol… 37899 Weekly    Original    $ mi… RBA    2024-08-16
-#> 2 2013-07-10 Australian dol… 35106 Weekly    Original    $ mi… RBA    2024-08-16
-#> 3 2013-07-17 Australian dol… 32090 Weekly    Original    $ mi… RBA    2024-08-16
-#> 4 2013-07-24 Australian dol… 39592 Weekly    Original    $ mi… RBA    2024-08-16
-#> 5 2013-07-31 Australian dol… 41286 Weekly    Original    $ mi… RBA    2024-08-16
-#> 6 2013-08-07 Australian dol… 37974 Weekly    Original    $ mi… RBA    2024-08-16
+#> 1 2013-07-03 Australian dol… 37899 Weekly    Original    $ mi… RBA    2025-08-01
+#> 2 2013-07-10 Australian dol… 35106 Weekly    Original    $ mi… RBA    2025-08-01
+#> 3 2013-07-17 Australian dol… 32090 Weekly    Original    $ mi… RBA    2025-08-01
+#> 4 2013-07-24 Australian dol… 39592 Weekly    Original    $ mi… RBA    2025-08-01
+#> 5 2013-07-31 Australian dol… 41286 Weekly    Original    $ mi… RBA    2025-08-01
+#> 6 2013-08-07 Australian dol… 37974 Weekly    Original    $ mi… RBA    2025-08-01
 #> # ℹ 3 more variables: series_id <chr>, description <chr>, table_title <chr>
-```
-
-``` r
 
 unique(rba_data$table_title)
 #> [1] "A1 Reserve Bank Of Australia - Balance Sheet"
@@ -141,20 +158,21 @@ only:
 
 ``` r
 cpi_series <- read_rba(series_id = "GCPIAG")
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
 head(cpi_series)
 #> # A tibble: 6 × 11
 #>   date       series          value frequency series_type units source pub_date  
 #>   <date>     <chr>           <dbl> <chr>     <chr>       <chr> <chr>  <date>    
-#> 1 1922-06-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 2 1922-09-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 3 1922-12-31 Consumer price…   2.7 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 4 1923-03-31 Consumer price…   2.7 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 5 1923-06-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2024-08-01
-#> 6 1923-09-30 Consumer price…   2.9 Quarterly Original    Inde… ABS /… 2024-08-01
+#> 1 1922-06-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 2 1922-09-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 3 1922-12-31 Consumer price…   2.7 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 4 1923-03-31 Consumer price…   2.7 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 5 1923-06-30 Consumer price…   2.8 Quarterly Original    Inde… ABS /… 2025-07-31
+#> 6 1923-09-30 Consumer price…   2.9 Quarterly Original    Inde… ABS /… 2025-07-31
 #> # ℹ 3 more variables: series_id <chr>, description <chr>, table_title <chr>
-```
-
-``` r
 unique(cpi_series$series_id)
 #> [1] "GCPIAG"
 ```
@@ -170,6 +188,14 @@ available, using the `cur_hist` argument:
 ``` r
 
 hist_a11 <- read_rba(table_no = "a1.1", cur_hist = "historical")
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> Warning: All formats failed to parse. No formats found.
+#> Warning: All formats failed to parse. No formats found.
 
 head(hist_a11)
 #> # A tibble: 6 × 11
@@ -192,7 +218,7 @@ Each returns a tibble with information about the available RBA data.
 
 ``` r
 browse_rba_tables()
-#> # A tibble: 127 × 5
+#> # A tibble: 125 × 5
 #>    title                              no    url   current_or_historical readable
 #>    <chr>                              <chr> <chr> <chr>                 <lgl>   
 #>  1 RBA Balance Sheet                  A1    http… current               TRUE    
@@ -205,12 +231,12 @@ browse_rba_tables()
 #>  8 Banknotes on Issue by Denomination A6    http… current               TRUE    
 #>  9 Detected Australian Counterfeits … A7    http… current               TRUE    
 #> 10 Assets of Financial Institutions   B1    http… current               TRUE    
-#> # ℹ 117 more rows
+#> # ℹ 115 more rows
 ```
 
 ``` r
 browse_rba_series()
-#> # A tibble: 4,369 × 8
+#> # A tibble: 4,354 × 8
 #>    table_no series        series_id series_type table_title cur_hist description
 #>    <chr>    <chr>         <chr>     <chr>       <chr>       <chr>    <chr>      
 #>  1 A1       Australian G… ARBALDOG… Original    A1 Reserve… current  Australian…
@@ -223,7 +249,7 @@ browse_rba_series()
 #>  8 A1       Exchange set… ARBALESBW Original    A1 Reserve… current  Exchange s…
 #>  9 A1       Exchange set… ARBALESBW Original    A1 Reserve… histori… Exchange s…
 #> 10 A1       Gold and for… ARBAAGFXW Original    A1 Reserve… current  Gold and f…
-#> # ℹ 4,359 more rows
+#> # ℹ 4,344 more rows
 #> # ℹ 1 more variable: frequency <chr>
 ```
 
@@ -248,7 +274,9 @@ Policy forecasts.
 
 ``` r
 rba_forecasts()
-#> # A tibble: 7,070 × 8
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> # A tibble: 7,480 × 8
 #>    series_desc       forecast_date notes source value date       year_qtr series
 #>    <chr>             <date>        <chr> <chr>  <dbl> <date>        <dbl> <chr> 
 #>  1 CPI - 4 quarter … 1990-03-01    <NA>  JEFG     8.6 1990-03-01    1990. cpi_a…
@@ -261,27 +289,29 @@ rba_forecasts()
 #>  8 Unemployment rate 1990-03-01    <NA>  JEFG     6.3 1990-03-01    1990. unemp…
 #>  9 Unemployment rate 1990-03-01    <NA>  JEFG     6.5 1990-06-01    1990. unemp…
 #> 10 Unemployment rate 1990-03-01    <NA>  JEFG     6.7 1990-09-01    1990. unemp…
-#> # ℹ 7,060 more rows
+#> # ℹ 7,470 more rows
 ```
 
 If you just want the latest forecasts, you can request them:
 
 ``` r
 rba_forecasts(all_or_latest = "latest")
-#> # A tibble: 148 × 8
+#> Warning in utils::download.file(url = url, destfile = destfile, mode = mode, :
+#> the 'wininet' method is deprecated for http:// and https:// URLs
+#> # A tibble: 131 × 8
 #>    forecast_date date       series       value series_desc source notes year_qtr
 #>    <date>        <date>     <chr>        <dbl> <chr>       <chr>  <chr>    <dbl>
-#>  1 2024-08-01    2024-06-01 aena_change    6.6 Nominal (n… ABS (… Year…    2024.
-#>  2 2024-08-01    2024-12-01 aena_change    3.8 Nominal (n… ABS (… Year…    2024.
-#>  3 2024-08-01    2025-06-01 aena_change    4.3 Nominal (n… ABS (… Year…    2025.
-#>  4 2024-08-01    2025-12-01 aena_change    4.1 Nominal (n… ABS (… Year…    2025.
-#>  5 2024-08-01    2026-06-01 aena_change    4.1 Nominal (n… ABS (… Year…    2026.
-#>  6 2024-08-01    2026-12-01 aena_change    3.6 Nominal (n… ABS (… Year…    2026.
-#>  7 2024-08-01    2024-06-01 business_in…   1.4 Business i… ABS (… Year…    2024.
-#>  8 2024-08-01    2024-12-01 business_in…   0.1 Business i… ABS (… Year…    2024.
-#>  9 2024-08-01    2025-06-01 business_in…   2.2 Business i… ABS (… Year…    2025.
-#> 10 2024-08-01    2025-12-01 business_in…   2.7 Business i… ABS (… Year…    2025.
-#> # ℹ 138 more rows
+#>  1 2025-05-01    2025-06-01 aena_change    4.1 Nominal (n… ABS (… Year…    2025.
+#>  2 2025-05-01    2025-12-01 aena_change    4.1 Nominal (n… ABS (… Year…    2025.
+#>  3 2025-05-01    2026-06-01 aena_change    3.8 Nominal (n… ABS (… Year…    2026.
+#>  4 2025-05-01    2026-12-01 aena_change    3.5 Nominal (n… ABS (… Year…    2026.
+#>  5 2025-05-01    2027-06-01 aena_change    3.5 Nominal (n… ABS (… Year…    2027.
+#>  6 2025-05-01    2025-06-01 business_in…   0.2 Business i… ABS (… Year…    2025.
+#>  7 2025-05-01    2025-12-01 business_in…   0.6 Business i… ABS (… Year…    2025.
+#>  8 2025-05-01    2026-06-01 business_in…   1.8 Business i… ABS (… Year…    2026.
+#>  9 2025-05-01    2026-12-01 business_in…   2.9 Business i… ABS (… Year…    2026.
+#> 10 2025-05-01    2027-06-01 business_in…   3.4 Business i… ABS (… Year…    2027.
+#> # ℹ 121 more rows
 ```
 
 ## Data availability
